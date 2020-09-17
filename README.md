@@ -1,8 +1,10 @@
 # newegg-web-scraper
 Scrapes Newegg for prices on CPUs.... assuming they haven't changed their page layout that is.
 
-Please make sure that you have Python 3.8 and BeautifulSoup 4.0+ installed in order for this to work. You can run it with the .bat
+Please make sure that you have Python 3.8+ and BeautifulSoup 4.0+ installed in order for this to work. You can run it with the .bat
 file if you're on Windows or by executing the start.py file.
+
+Use "sudo apt-get install python3-bs4" to install BeautifulSoup4 if on Linux.
 
 The output will be placed into a .csv file. Program may take 30+ seconds depending on CPU and Internet speeds.
 
