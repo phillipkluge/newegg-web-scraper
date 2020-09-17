@@ -1,12 +1,12 @@
 '''
 Webscraper created by Phillip Kluge. This webscraper uses BeautifulSoup4 as a dependency, make sure you have that and Python3 installed.
 Make sure that you do not use this too often as Newegg/Amazon/Memeory-Express will detect it as a DOS attack or a script, dont go overboard ;)
-Don't change the URL given below as that may break some things. If any site has updated their website and this script no longer works, contact me.
+Don't change the URL given below as that may break some things. If any site has been updated and this script no longer works, contact me.
 Make sure all version are the same between Python files, otherwise things could break. Keep all python files in the same folder.
 
 I recommend a VPN to make sure you're not treated as a bot right away. If you get an out of index error, that's where that's from. Sorry, switch locations.
 
-Version: 1.0.0
+Version: 1.0.1
 
 Github: @phillipkluge
 LinkedIn: @phillipjkluge

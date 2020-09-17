@@ -2,7 +2,7 @@
 Webscraper created by Phillip Kluge. This webscraper uses BeautifulSoup4 as a dependency, make sure you have that and Python3 installed.
 Make sure that you do not use this too often as Newegg will detect it as a DOS attack or a script; dont go overboard ;)
 
-Version: 1.0.0
+Version: 1.0.1
 
 Github: @phillipkluge
 LinkedIn: @phillipjkluge
@@ -14,14 +14,16 @@ Twitter: @phillipjkluge
 from urllib.request import urlopen as urlreq
 from bs4 import BeautifulSoup as bsoup
 import csv
+import datetime
 
 def scraper(target_url):
 
 	if (target_url == 'https://www.newegg.ca/p/pl?N=100007670%2050001157&cm_sp=Cat_CPU-Processors_8-_-Visnav-_-Intel-CPU&page=1'):
-		titles = "brand, product_name, sale_percentage, price, shipping, total, url_link \n"
+		titles = "brand, product_name, sale_percentage, price, shipping, total, url_link"
 		file_name = "newegg.csv"
 		f = open(file_name, "w")
-		f.write(titles)
+		currentDate = str(datetime.datetime.now())
+		f.write(titles + ',,,' + currentDate + "\n")
 	else:
 		file_name = "newegg.csv"
 		f = open(file_name, "a")
