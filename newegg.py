@@ -2,7 +2,7 @@
 Webscraper created by Phillip Kluge. This webscraper uses BeautifulSoup4 as a dependency, make sure you have that and Python3 installed.
 Make sure that you do not use this too often as Newegg will detect it as a DOS attack or a script; dont go overboard ;)
 
-Version: 1.0.1
+Version: 1.0.0
 
 Github: @phillipkluge
 LinkedIn: @phillipjkluge
