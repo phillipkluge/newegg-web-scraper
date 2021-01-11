@@ -2,7 +2,7 @@
 Webscraper created by Phillip Kluge. This webscraper uses BeautifulSoup4 as a dependency, make sure you have that and Python3 installed.
 Make sure that you do not use this too often as Newegg will detect it as a DOS attack or a script; a VPN is recommended!
 
-Version: 2.0.0 R1
+Version: 2.0.0 R2
 Release: 2021/01/10
 
 Github: @phillipkluge
@@ -423,6 +423,7 @@ if __name__ == "__main__":
     print('\n')
 
     scraper_1 = Scraper(intel, amd, debug)
+    
     error_trip = False
     try:
         scraper_1.scrape()
