@@ -7,7 +7,6 @@ Release: 2021/01/10
 
 Github: @phillipkluge
 LinkedIn: @phillipjkluge
-Twitter: @phillipjkluge
 
 '''
 
