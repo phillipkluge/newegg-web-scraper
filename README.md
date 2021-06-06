@@ -26,7 +26,7 @@ If you wish to scrape another Newegg URL (even if they're not related to CPUs), 
 
 	-Use "sudo apt-get install python3-bs4" to install BeautifulSoup4 if on Linux.
 
-**Output:
+***Output:
 	
 	-The output will be placed into a .csv file. Program may take 30+ seconds depending on CPU speed, internet speed, and any delay entered, although internet connection is 	 the main bottleneck.
 
@@ -40,12 +40,12 @@ If you wish to scrape another Newegg URL (even if they're not related to CPUs), 
 	 
 	-If you encounter any issues, please contact me. I am also aware that the code is very messy and inefficient; this being a byproduct of updating old code to new standards,
 
-Included Files:
+***Included Files:
 	
 	-newegg.py
 	-README.md
 	-run.bat
 	
-Outputs:
+***Outputs:
 	
 	-newegg.csv
