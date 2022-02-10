@@ -1,2 +1,0 @@
-python newegg.py
-pause
