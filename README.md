@@ -61,7 +61,7 @@ Default AMD CPU URL:
 
 * Updated some of the code for better practice; including the addition of some comments.
 * Both the `driver.py` and the `newegg.py` files were updated to conform with PEP-8 standards.
-* .bat script was changed out for a shell script in order to run on Linux. If you don't like this change you are more than welcome to message me and I will ignore it.
+* .bat script was changed out for a shell script in order to run on Linux.
 
 ## PLANNED UPDATES:
 
