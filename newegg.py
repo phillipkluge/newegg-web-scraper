@@ -168,9 +168,9 @@ class Scraper:
                 anchor_element = page_soup.find(
                     "div", {"class": "list-tool-search"}).label.text
                 if anchor_element != "Search Within:":
-                    Handler.error_handler(type=Errors.BOT, exit=True, delay=3)
+                    Handler.error_handler(type=Errors.LOAD, exit=True, delay=3)
             except AttributeError:
-                Handler.error_handler(type=Errors.BOT, exit=True, delay=3)
+                Handler.error_handler(type=Errors.LOAD, exit=True, delay=3)
 
             # finds every product listing on the current page
             item_containers = page_soup.find_all(
