@@ -49,7 +49,9 @@ Default AMD CPU URL:
 * If you encounter any issues, please contact me. I am also aware that the code is very messy and inefficient; this being a byproduct of updating old code to new standards.
 
 ## Included Files:
-	
+* constants.py
+* driver.py
+* handler.py
 * newegg.py
 * README.md
 * run
