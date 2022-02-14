@@ -6,8 +6,8 @@ make sure you have that and Python3 installed.
 Make sure that you do not use this too often as Newegg will detect
 it as a DOS attack or a script; a VPN is recommended!
 
-Version: 3.0.0 B1
-Current Release: 2022/02/11
+Version: 3.0.1 B1
+Current Release: 2022/02/14
 Original Release: 2021/01/10
 
 Github: @phillipkluge
@@ -29,19 +29,26 @@ class Handler():
 
     @staticmethod
     def error_handler(type: Errors, exit: Boolean, delay: int) -> None:
-        print(Formatting.ERROR_HEADER)
+        print("\n" + Formatting.ERROR_HEADER)
         if type == Errors.URL:
-            print("INVALID URL; ERROR CODE: " + type)
+            print("INVALID URL; ERROR CODE: " + str(type.value))
         elif type == Errors.FILE:
-            print("UNABLE TO OPEN FILE; ERROR CODE: " + type)
+            print("UNABLE TO OPEN FILE; ERROR CODE: " + str(type.value))
         elif type == Errors.LOAD:
-            print("UNABLE TO LOAD PAGE; ERROR CODE: " + type)
+            print("UNABLE TO LOAD PAGE; ERROR CODE: " + str(type.value))
         elif type == Errors.URL_SET:
-            print("UNABLE TO SET URL; ERROR CODE: " + type)
-        print(Formatting.ERROR_HEADER + "\n")
+            print("UNABLE TO SET URL; ERROR CODE: " + str(type.value))
+        elif type == Errors.MODULE:
+            print("MISSING DEPENDENCIES, NO MODULE; ERROR CODE: " +
+                  str(type.value))
+        print(Formatting.ERROR_HEADER)
 
         sleep(delay)
-        sys.exit(0)
+        if exit:
+            print("\n" + Formatting.PROGRAM_HEADER)
+            Handler.clean(done=False)
+            print(Formatting.PROGRAM_HEADER)
+            sys.exit(0)
 
     @staticmethod
     def input_handler(
@@ -101,14 +108,21 @@ class Handler():
     def clean(done: Boolean = False) -> None:
         if not done:
             try:
-                print("Cleaning up unfinished files... ", end='')
+                print("Cleaning up csv file... ", end='')
                 os.remove("newegg.csv")
                 print("done")
             except FileNotFoundError:
                 print("none found")
 
+            try:
+                print("Cleaning up csv cache... ", end='')
+                os.remove(".~lock.newegg.csv#")
+                print("done")
+            except FileNotFoundError:
+                print("none found")
+
         try:
-            print("Cleaning up cache... ", end='')
+            print("Cleaning up pycache... ", end='')
             shutil.rmtree(path="./__pycache__/")
             print("done")
         except FileNotFoundError:
