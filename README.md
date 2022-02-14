@@ -3,8 +3,8 @@ ______________________________
 Author: Phillip Kluge \
 Email: phillipjkluge@gmail.com \
 Github: @phillipkluge \
-Version: 2.1.0 R2 \
-Current Release: 2022/02/10 \
+Version: 3.0.0 B1 \
+Current Release: 2022/02/11 \
 Original Release: 2021/01/10
 ______________________________
 

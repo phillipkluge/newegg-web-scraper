@@ -6,8 +6,8 @@ make sure you have that and Python3 installed.
 Make sure that you do not use this too often as Newegg will detect
 it as a DOS attack or a script; a VPN is recommended!
 
-Version: 2.1.0 R2
-Current Release: 2022/02/10
+Version: 3.0.0 B1
+Current Release: 2022/02/11
 Original Release: 2021/01/10
 
 Github: @phillipkluge
@@ -17,76 +17,67 @@ This file conforms to the PEP-8 style guide.
 '''
 
 # importing all necessary dependencies
-import urllib
 from urllib.request import urlopen as urlreq
-from xmlrpc.client import boolean
+from xmlrpc.client import Boolean, boolean
 from bs4 import BeautifulSoup as bsoup
-import csv
 import datetime
 from time import sleep
-
+from handler import Errors, Inputs, Handler
+from constants import *
 
 class Scraper:
 
     intel = None  # allocates the intel link from the driver
     amd = None  # allocates the amd link from the driver
 
-    _debug = None  # state of the debug mode
     _delay = None  # the delay between pages
     _first = True  # boolean True if it's the program's first run through
-    _repeat = None  # boolean True if the program needs to repeat
+    _repeat = None  # boolean True if the program needs to repeat for another URL
     _page_limit = None  # the number of pages to scrape through
     _target_url = None  # the current selected URL to scrape
+    _done = False
 
-    def __init__(self, intel, amd, debug) -> None:
-        # sets the target URL
+    def __init__(self, intel, amd) -> None:
+        # sets the inital variables
         self.intel = intel
         self.amd = amd
-        self._debug = debug
         self._delay = 0
 
         # setting up the desired behavior behavior
-        cpu_setting = input("Enter a CUSTOM link for scraping, "
-                            "or use DEFAULTS? (c/d): ")
+        cpu_setting = input("Enter a custom link for scraping? (y/n): ")
         cpu_setting = cpu_setting.lower()
-        cpu_setting = input_verifier(1, cpu_setting)
-        if cpu_setting == "d":
-            num_setting = input("Press 1 for the Intel URL, "
-                                "2 for the AMD, or 3 for both: ")
-            num_setting = input_verifier(3, num_setting)
-        elif cpu_setting == "c":
+        cpu_setting = Handler.input_handler(type=Inputs.YES_NO,stat_input=cpu_setting)
+        if cpu_setting == "y":
             print("Enter a custom URL that you wish to scrape")
             print("***Make sure that the url has '&page=1' at the end!!!")
             num_setting = input("Input: ")
-            num_setting = input_verifier(2, num_setting)
+            num_setting = Handler.input_handler(type=Inputs.URL,stat_input=num_setting)
 
-        print("\n")
+        else:
+            num_setting = input("Press 1 for the Intel URL, "
+                                "2 for the AMD, or 3 for both: ")
+            num_setting = Handler.input_handler(type=Inputs.NUMBER,stat_input=num_setting,lower=1,upper=3)
 
         page_setting = input("Limit the number of pages scraped? (y/n): ")
         page_setting = page_setting.lower()
-        page_setting = input_verifier(0, page_setting)
+        page_setting = Handler.input_handler(type=Inputs.YES_NO,stat_input=page_setting)
         if page_setting == "y":
             self._page_limit = input("Max number of pages: ")
-            self._page_limit = input_verifier(5, self._page_limit)
-            self._page_limit = input_verifier(7, self._page_limit)
-        elif page_setting == "n":
+            self._page_limit = Handler.input_handler(type=Inputs.NUMBER,stat_input=self._page_limit,lower=1)
+        else:
             self._page_limit = -1
 
-        print("\n")
-
-        ask_delay = input("Add a delay between each page? "
-                          "May reduce proliferation of errors. (y/n): ")
-        ask_delay = ask_delay.lower()
-        ask_delay = input_verifier(0, ask_delay)
-        if ask_delay == "y":
-            delay_in = input("Delay (in seconds) (1-9) : ")
-            delay_in = input_verifier(5, delay_in)
-            delay_in = input_verifier(6, delay_in)
-            self._delay = delay_in
-        else:
-            print("No delay specified... continuing program execution")
-
-        print("\n")
+        if (self._page_limit != 1):
+            ask_delay = input("Add a delay between each page? "
+                            "May reduce proliferation of errors. (y/n): ")
+            ask_delay = ask_delay.lower()
+            ask_delay = Handler.input_handler(type=Inputs.YES_NO,stat_input=ask_delay)
+            if ask_delay == "y":
+                delay_in = input("Delay (in seconds) (1-9) : ")
+                delay_in = Handler.input_handler(type=Inputs.NUMBER,stat_input=delay_in,lower=1,upper=9)
+                self._delay = delay_in
+            else:
+                print("No delay specified... continuing program execution")
 
         try:
             num_setting = int(num_setting)
@@ -102,8 +93,13 @@ class Scraper:
                 self._target_url = self.intel
                 self._repeat = True
         except:
-            self._target_url = num_setting
-            self._repeat = False
+            Handler.error_handler(type=Errors.URL_SET,exit=True,delay=3)
+
+    def __del__(self):
+        print("\n" + Formatting.PROGRAM_HEADER)
+        Handler.clean(self._done)
+        print(Formatting.PROGRAM_HEADER)
+        
 
     def scrape(self) -> None:
         if self._first:
@@ -113,35 +109,16 @@ class Scraper:
             try:
                 f = open(file_name, "w")
             except PermissionError:
-                print("------ERROR------ERROR------ERROR------ERROR------"
-                      "ERROR------ERROR------ERROR------")
-                print("FILE OPEN ERROR! Please close the .csv file before "
-                      "running the program.")
-                print("--------------------------------------------------"
-                      "---------------------------------")
-                print("\n")
-                print("Exiting program...")
-                sleep(3)
-                quit()
+                Handler.error_handler(type=Errors.FILE,exit=True,delay=3)
             currentDate = str(datetime.datetime.now())
             f.write(titles + ",,," + currentDate + "\n")
-            print("Collecting data, be patient!...")
-            print("\n")
+            print("\nCollecting data, be patient!...")
         else:
             file_name = "newegg.csv"
             try:
                 f = open(file_name, "a")
             except PermissionError:
-                print("------ERROR------ERROR------ERROR------ERROR------"
-                      "ERROR------ERROR------ERROR------")
-                print("FILE OPEN ERROR! Please close the .csv file before "
-                      "running the program.")
-                print("--------------------------------------------------"
-                      "---------------------------------")
-                print("\n")
-                print("Exiting program...")
-                sleep(3)
-                quit()
+                Handler.error_handler(type=Errors.FILE,exit=True,delay=3)
 
         # setting the target URL, downloading the page, reading the contents,
         # and dumping it into a variable called url_page_dump
@@ -160,9 +137,6 @@ class Scraper:
         except:
             num_of_pages = "1"
 
-        if self._debug:
-            print("------------------------------"
-                  "DEBUG------------------------------")
         # looping through all the found pages
         for i in range(1, int(num_of_pages) + 1):
             if ((i > self._page_limit) and (self._page_limit != -1)):
@@ -175,8 +149,6 @@ class Scraper:
 
             digit_length = len(str(i - 1))
             self._target_url = self._target_url[0:-digit_length] + str(i)
-            if self._debug:
-                print("PAGE URL: " + str(self._target_url))
 
             url_page_download = urlreq(self._target_url)
             url_page_dump = url_page_download.read()
@@ -186,31 +158,9 @@ class Scraper:
                 anchor_element = page_soup.find(
                     "div", {"class": "list-tool-search"}).label.text
                 if anchor_element != "Search Within:":
-                    print("\n")
-                    print("------ERROR------ERROR------ERROR------"
-                          "ERROR------ERROR------ERROR------ERROR------")
-                    print("Newegg has likely detected this as a bot"
-                          "! Please consider adding a delay, limiting "
-                          "pages, and chaning the VPN server location")
-                    print("----------------------------------------"
-                          "-------------------------------------------")
-                    print("\n")
-                    print("Exiting program...")
-                    sleep(3)
-                    quit()
+                    Handler.error_handler(type=Errors.BOT, exit=True, delay=3)
             except AttributeError:
-                print("\n")
-                print("------ERROR------ERROR------ERROR------ERROR------"
-                      "ERROR------ERROR------ERROR------")
-                print("Newegg has likely detected this as a bot! Please "
-                      "consider adding a delay, limiting "
-                      "pages, and chaning the VPN server location!")
-                print("--------------------------------------------------"
-                      "---------------------------------")
-                print("\n")
-                print("Exiting program...")
-                sleep(3)
-                quit()
+                Handler.error_handler(type=Errors.BOT, exit=True, delay=3)
 
             # finds every product listing on the current page
             item_containers = page_soup.find_all(
@@ -219,8 +169,6 @@ class Scraper:
             # loops through all the products (container) and
             # returns useful information about them
             for container in item_containers:
-                if self._debug:
-                    print("PAGE: " + str(i))
 
                 # finds the product brand
                 try:
@@ -228,8 +176,6 @@ class Scraper:
                         "a", {"class": "item-brand"}).img["title"]
                 except:
                     product_brand = "Unknown Brand"
-                if self._debug:
-                    print("BRAND: " + product_brand)
 
                 # finds the product name
                 try:
@@ -237,8 +183,6 @@ class Scraper:
                         "a", {"class": "item-title"}).text
                 except:
                     product_name = "Unknown Name"
-                if self._debug:
-                    print("PRODUCT NAME: " + product_name)
 
                 # finds the sale percentage
                 try:
@@ -248,8 +192,6 @@ class Scraper:
                         product_sale_percent = "0%"
                 except:
                     product_sale_percent = "0%"
-                if self._debug:
-                    print("SALE PERCENT: " + product_sale_percent)
 
                 # finds the product price and replaces a comma with
                 # nothing if there exists one in the price
@@ -264,8 +206,6 @@ class Scraper:
                     product_price = "0"
                 if ("," in product_price):
                     product_price = product_price.replace(",", "")
-                if self._debug:
-                    print("PRICE: " + product_price)
 
                 # finds the product shipping price
                 try:
@@ -283,8 +223,6 @@ class Scraper:
                     product_shipping_price = "0"
                 else:
                     product_shipping_price = "0"
-                if self._debug:
-                    print("SHIPPING PRICE: " + product_shipping_price)
 
                 # calculates the total product price with shipping included
                 # (also limits the float value to 2 decimal places)
@@ -295,161 +233,34 @@ class Scraper:
                         total_product_price = "Unknown Price"
                 except:
                     total_product_price = product_price
-                if self._debug:
-                    print("TOTAL PRICE: " + total_product_price)
 
                 try:
                     product_link = container.find(
                         "a", {"class": "item-title"})["href"]
                 except:
                     product_link = "https://newegg.ca"
-                if self._debug:
-                    print("URL: " + product_link)
 
                 f.write(product_brand + "," + product_name.replace(
                     ",", ";") + "," + product_sale_percent + "," +
                     product_price + "," + product_shipping_price + "," +
                     total_product_price + "," + product_link + "\n")
-                if self._debug:
-                    print("__________________________"
-                          "___________________________")
 
             if ((self._delay != 0) and (i != int(num_of_pages)) and
                     (not page_limit_test)):
-                if self._debug:
-                    print("\n")
-                    print("------------------------"
-                          "DEBUG------------------------")
-                    print("Delaying for " + str(
-                        self._delay) +
-                        " second(s)")
-                    print("------------------------"
-                          "-----------------------------")
 
-                for i in range(0, self._delay):
-                    if self._debug:
-                        print("Delay time left: " + str(
-                            self._delay - i), end="\r")
+                for i in range(0, self._delay + 1):
+                    print("Delay time left: " + str(
+                          self._delay - i), end="\r")
                     sleep(1)
-
-                if self._debug:
-                    print("\n")
-                    print("________________________"
-                          "_____________________________")
-
-        if self._debug:
-            print("--------------------------------"
-                  "---------------------------------")
-            print("\n")
-            print("------------------------"
-                  "DEBUG------------------------")
-            print("End of main sequence reached!")
-            print("------------------------"
-                  "-----------------------------")
 
         f.close()
 
         if self._repeat:
-            if self._debug:
-                print("\n")
-                print("------------------------"
-                      "DEBUG------------------------")
-                print("Repeat sequence reached!")
-                print("------------------------"
-                      "-----------------------------")
-                print("\n")
             self._repeat = False
             self._first = False
 
             self._target_url = self.amd
 
             self.scrape()
-
-
-def input_verifier(ver_code, stat_input) -> str:
-    trip = False
-
-    # Verifier for the (y/n) questions
-    if ver_code == 0:
-        while ((stat_input != "y") and (stat_input != "n")):
-            trip = True
-            stat_input = input("Unrecognized input! Please enter (y/n): ")
-            stat_input = stat_input.lower()
-        if trip:
-            print("\n")
-        return stat_input
-
-    # Verifier for the (c/d) questions
-    elif ver_code == 1:
-        while ((stat_input != "c") and (stat_input != "d")):
-            trip = True
-            stat_input = input("Unrecognized input! Please enter (c/d): ")
-            stat_input = stat_input.lower()
-        if trip:
-            print("\n")
-        return stat_input
-
-    # Verifier for the URL questions
-    elif ver_code == 2:
-        while (((stat_input[0:21]) != "https://www.newegg.ca") or (
-                (stat_input[-7:-1] + "1") != "&page=1")):
-            print("\n")
-            trip = True
-            print("Please make sure that the URL is in the format:")
-            print("https://www.newegg.ca/...&page=1")
-            stat_input = input("Please try again: ")
-        if trip:
-            print("\n")
-        return stat_input
-
-    # Verifier for the input with 1, 2, or 3 as the options
-    elif ver_code == 3:
-        try:
-            stat_input = int(stat_input)
-            while ((stat_input != 1) and (
-                    stat_input != 2) and (stat_input != 3)):
-                trip = True
-                stat_input = input(
-                    "Unrecognized input! Please enter (1/2/3): ")
-                try:
-                    stat_input = int(stat_input)
-                except:
-                    trip = True
-        except:
-            while ((stat_input != 1) and (
-                    stat_input != 2) and (stat_input != 3)):
-                trip = True
-                stat_input = input(
-                    "Unrecognized input! Please enter (1/2/3): ")
-                try:
-                    stat_input = int(stat_input)
-                except:
-                    trip = True
-        return stat_input
-
-    # Verifier for the input when it needs to be an int
-    elif ver_code == 5:
-        try:
-            stat_input = int(stat_input)
-        except:
-            while ((type(stat_input) is not int)):
-                stat_input = input("Input needs to be an integer!: ")
-                try:
-                    stat_input = int(stat_input)
-                except:
-                    stat_input = "a"
-                if stat_input is int:
-                    break
-        return stat_input
-
-    elif ver_code == 6:
-        if stat_input < 1:
-            stat_input = 1
-        elif stat_input > 9:
-            stat_input = 9
-        return stat_input
-
-    elif ver_code == 7:
-        if stat_input < 1:
-            stat_input = 1
-        return stat_input
+        else:
+            self._done = True
