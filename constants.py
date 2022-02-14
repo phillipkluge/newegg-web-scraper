@@ -6,8 +6,8 @@ make sure you have that and Python3 installed.
 Make sure that you do not use this too often as Newegg will detect
 it as a DOS attack or a script; a VPN is recommended!
 
-Version: 3.0.0 B1
-Current Release: 2022/02/11
+Version: 3.0.1 B1
+Current Release: 2022/02/14
 Original Release: 2021/01/10
 
 Github: @phillipkluge
@@ -23,6 +23,7 @@ class Errors(Enum):
     FILE = 1
     LOAD = 2
     URL_SET = 3
+    MODULE = 4
 
 
 class Inputs(Enum):
@@ -32,13 +33,13 @@ class Inputs(Enum):
 
 
 class Formatting():
-    PROGRAM_VERSION: str = ("3.0.0 B1")
-    HEADER_LENGTH: int = 8
+    PROGRAM_VERSION: str = ("3.0.1 B1")
+    HEADER_LENGTH: int = 10
     PROGRAM_HEADER: str = ("-----" * HEADER_LENGTH)
-    ERROR_HEADER: str = ("*****" * HEADER_LENGTH)
+    ERROR_HEADER: str = ("=====" * HEADER_LENGTH)
 
 
-def Program_Header() -> None:
+def print_header() -> None:
     print(Formatting.PROGRAM_HEADER)
     print("NEWEGG WEB SCRAPER")
     print("Author: Phillip Kluge")
