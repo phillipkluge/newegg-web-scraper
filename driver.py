@@ -9,8 +9,8 @@ it as a DOS attack or a script; a VPN is recommended!
 This is the driver code for newegg.py.
 Please run the program using ./run if on Linux
 
-Version: 3.0.0 B1
-Current Release: 2022/02/11
+Version: 3.0.1 B1
+Current Release: 2022/02/14
 Original Release: 2021/01/10
 
 Github: @phillipkluge
@@ -22,8 +22,9 @@ This file conforms to the PEP-8 style guide.
 import urllib
 import signal
 import sys
-from newegg import Errors, Handler, Scraper, Program_Header
-from constants import *
+from newegg import Scraper
+from handler import Handler
+from constants import Errors, print_header
 
 intel = ("https://www.newegg.ca/p/pl?N=100007670%2050001157&cm_sp="
          "Cat_CPU-Processors_8-_-Visnav-_-Intel-CPU&page=1")
@@ -37,7 +38,7 @@ def signal_handler(sig, frame):
 
 
 if __name__ == "__main__":
-    Program_Header()
+    print_header()
 
     signal.signal(signal.SIGINT, signal_handler)
 
