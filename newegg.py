@@ -6,8 +6,8 @@ make sure you have that and Python3 installed.
 Make sure that you do not use this too often as Newegg will detect
 it as a DOS attack or a script; a VPN is recommended!
 
-Version: 3.0.0 B1
-Current Release: 2022/02/11
+Version: 3.0.1 B1
+Current Release: 2022/02/14
 Original Release: 2021/01/10
 
 Github: @phillipkluge
@@ -17,13 +17,16 @@ This file conforms to the PEP-8 style guide.
 '''
 
 # importing all necessary dependencies
-from urllib.request import urlopen as urlreq
-from xmlrpc.client import Boolean, boolean
-from bs4 import BeautifulSoup as bsoup
-import datetime
-from time import sleep
-from handler import Errors, Inputs, Handler
-from constants import *
+from handler import Handler
+from constants import Errors, Inputs, Formatting
+try:
+    from urllib.request import urlopen as urlreq
+    from xmlrpc.client import Boolean, boolean
+    from bs4 import BeautifulSoup as bsoup
+    import datetime
+    from time import sleep
+except ModuleNotFoundError:
+    Handler.error_handler(type=Errors.MODULE, exit=True, delay=3)
 
 
 class Scraper:
@@ -196,7 +199,8 @@ class Scraper:
 
                 # finds the sale percentage
                 try:
-                    product_sale_percent = container.find("span", {"class": "price-save-percent"}).text
+                    product_sale_percent = container.find(
+                        "span", {"class": "price-save-percent"}).text
                     if product_sale_percent[-1] != "%":
                         product_sale_percent = "0%"
                 except AttributeError or IndexError:
