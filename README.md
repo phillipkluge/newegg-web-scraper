@@ -3,8 +3,8 @@ ______________________________
 Author: Phillip Kluge \
 Email: phillipjkluge@gmail.com \
 Github: @phillipkluge \
-Version: 3.0.0 B1 \
-Current Release: 2022/02/11 \
+Version: 3.0.1 B1 \
+Current Release: 2022/02/14 \
 Original Release: 2021/01/10
 ______________________________
 
@@ -34,10 +34,8 @@ Default AMD CPU URL:
 * Extract all files and move into that directory.
 * Do `$ chmod +x ./run`.
 * Then use `$ ./run` to execute the program in a terminal window.
-
-## Output:
-	
 * The output will be placed into a .csv file. Program may take 30+ seconds depending on CPU speed, internet speed, and any delay entered, although internet connection is the main bottleneck.
+* To get rid of any files, use `$ make` or `$ make clean`. This will get rid of all pychaches, csv files, and csv locks.
 
 ## Important Notes:
 	
@@ -51,6 +49,7 @@ Default AMD CPU URL:
 * constants.py
 * driver.py
 * handler.py
+* Makefile
 * newegg.py
 * README.md
 * run
