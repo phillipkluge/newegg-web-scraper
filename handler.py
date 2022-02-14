@@ -24,6 +24,7 @@ from time import sleep
 from xmlrpc.client import Boolean, boolean
 from constants import *
 
+
 class Handler():
 
     @staticmethod
@@ -41,15 +42,17 @@ class Handler():
 
         sleep(delay)
         sys.exit(0)
-    
+
     @staticmethod
-    def input_handler(type: Inputs, stat_input: str, lower=0, upper=100) -> Union[str,int]:
+    def input_handler(
+            type: Inputs, stat_input: str, lower=0, upper=100) \
+            -> Union[str, int]:
         # Verifier for the (y/n) questions
         if type == Inputs.YES_NO:
             while True:
                 if ((stat_input != "y") and (stat_input != "n")):
                     try:
-                        stat_input = input("Unrecognized input! Please enter (y/n): ")
+                        stat_input = input("Please enter (y/n): ")
                         stat_input = stat_input.lower()
                     except SyntaxError:
                         continue
@@ -63,7 +66,7 @@ class Handler():
                 if ((stat_input[0:21] != "https://www.newegg.ca") or (
                         (stat_input[-7:-1] + "1") != "&page=1")):
                     print("Please make sure that the URL is in the format: \n"
-                        "https://www.newegg.ca/...&page=1")
+                          "https://www.newegg.ca/...&page=1")
                     try:
                         stat_input = input("Please try again: ")
                     except SyntaxError:
@@ -85,25 +88,27 @@ class Handler():
 
                 if not (lower <= stat_input <= upper):
                     try:
-                        stat_input = input("Please enter a valid number in range [" + str(lower) + "-" + str(upper) + "]: ")
+                        stat_input = input("Please enter a valid number in"
+                                           "range [" + str(lower) +
+                                           "-" + str(upper) + "]: ")
                     except SyntaxError:
                         continue
                     continue
                 break
             return stat_input
-    
+
     @staticmethod
-    def clean(done: Boolean=False) -> None:
+    def clean(done: Boolean = False) -> None:
         if not done:
             try:
-                print("Cleaning up unfinished files... ",end='')
+                print("Cleaning up unfinished files... ", end='')
                 os.remove("newegg.csv")
                 print("done")
             except FileNotFoundError:
                 print("none found")
 
         try:
-            print("Cleaning up cache... ",end='')
+            print("Cleaning up cache... ", end='')
             shutil.rmtree(path="./__pycache__/")
             print("done")
         except FileNotFoundError:

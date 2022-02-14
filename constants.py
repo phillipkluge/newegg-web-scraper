@@ -17,20 +17,31 @@ This file conforms to the PEP-8 style guide.'''
 
 from enum import Enum
 
+
 class Errors(Enum):
     URL = 0
     FILE = 1
     LOAD = 2
     URL_SET = 3
 
+
 class Inputs(Enum):
     YES_NO = 0  # If input is a yes/no question
     URL = 1  # If input needs to be a URL
     NUMBER = 2  # If input needs to be in an int and in a certain range
 
-class Formatting():
-    HEADER_LENGTH: int=8
-    PROGRAM_HEADER: str=("-----" * HEADER_LENGTH)
-    ERROR_HEADER: str=("*****" * HEADER_LENGTH)
 
-    
+class Formatting():
+    PROGRAM_VERSION: str = ("3.0.0 B1")
+    HEADER_LENGTH: int = 8
+    PROGRAM_HEADER: str = ("-----" * HEADER_LENGTH)
+    ERROR_HEADER: str = ("*****" * HEADER_LENGTH)
+
+
+def Program_Header() -> None:
+    print(Formatting.PROGRAM_HEADER)
+    print("NEWEGG WEB SCRAPER")
+    print("Author: Phillip Kluge")
+    print("Github: @phillipkluge")
+    print("Running version: " + Formatting.PROGRAM_VERSION)
+    print(Formatting.PROGRAM_HEADER)

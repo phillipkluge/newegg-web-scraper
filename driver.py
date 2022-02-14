@@ -22,7 +22,7 @@ This file conforms to the PEP-8 style guide.
 import urllib
 import signal
 import sys
-from newegg import Errors, Handler, Scraper
+from newegg import Errors, Handler, Scraper, Program_Header
 from constants import *
 
 intel = ("https://www.newegg.ca/p/pl?N=100007670%2050001157&cm_sp="
@@ -30,11 +30,14 @@ intel = ("https://www.newegg.ca/p/pl?N=100007670%2050001157&cm_sp="
 amd = ("https://www.newegg.ca/p/pl?N=100007670%20601306869&cm_sp="
        "Cat_CPU-Processors_1-_-Visnav-_-AMD-CPU&page=1")
 
+
 def signal_handler(sig, frame):
     print("\nABORTING PROGRAM...")
     sys.exit(0)
 
+
 if __name__ == "__main__":
+    Program_Header()
 
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -44,7 +47,7 @@ if __name__ == "__main__":
     error_trip = False
     try:
         scraper.scrape()
-        print("Done!")
+        print("\n" + "Done!")
     except urllib.error.HTTPError:
         error_trip = True
-        handler.error_handler(type=Errors.LOAD,exit=True,delay=3)
+        handler.error_handler(type=Errors.LOAD, exit=True, delay=3)

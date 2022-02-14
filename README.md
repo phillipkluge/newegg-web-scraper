@@ -27,7 +27,8 @@ Default AMD CPU URL:
 ## Dependencies:
 	
 * Please make sure that you have Python 3.8+ and BeautifulSoup 4.0+ installed in order for this to work.
-* Use `$ sudo apt install python3-bs4` to install BeautifulSoup4 if on Debian based Linux.
+* Use the pip command `$ pip install beautifulsoup4` to install BeautifulSoup4 if on Linux.
+* I recommend that you use Anaconda (miniconda) to manage your workspace when using pip.
 
 ## Running the Program:
 
@@ -66,6 +67,13 @@ Default AMD CPU URL:
 #### R2 RELEASE:
 * Fixed bug where text was spaced out during setup
 * Fixed bug where the program would not recognize any URLs
+
+#### B3 RELEASE:
+* Added a proper error and input handler
+* Fixed small existing bugs
+* Automated cleanup of old cache and unused files
+* Handled keyboard exceptions
+* Cleaned up some dependency problems
 
 ## PLANNED UPDATES:
 

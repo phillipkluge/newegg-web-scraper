@@ -25,6 +25,7 @@ from time import sleep
 from handler import Errors, Inputs, Handler
 from constants import *
 
+
 class Scraper:
 
     intel = None  # allocates the intel link from the driver
@@ -32,7 +33,7 @@ class Scraper:
 
     _delay = None  # the delay between pages
     _first = True  # boolean True if it's the program's first run through
-    _repeat = None  # boolean True if the program needs to repeat for another URL
+    _repeat = None  # boolean True if the program needs to repeat
     _page_limit = None  # the number of pages to scrape through
     _target_url = None  # the current selected URL to scrape
     _done = False
@@ -46,35 +47,45 @@ class Scraper:
         # setting up the desired behavior behavior
         cpu_setting = input("Enter a custom link for scraping? (y/n): ")
         cpu_setting = cpu_setting.lower()
-        cpu_setting = Handler.input_handler(type=Inputs.YES_NO,stat_input=cpu_setting)
+        cpu_setting = Handler.input_handler(type=Inputs.YES_NO,
+                                            stat_input=cpu_setting)
         if cpu_setting == "y":
             print("Enter a custom URL that you wish to scrape")
             print("***Make sure that the url has '&page=1' at the end!!!")
             num_setting = input("Input: ")
-            num_setting = Handler.input_handler(type=Inputs.URL,stat_input=num_setting)
+            num_setting = Handler.input_handler(type=Inputs.URL,
+                                                stat_input=num_setting)
 
         else:
             num_setting = input("Press 1 for the Intel URL, "
                                 "2 for the AMD, or 3 for both: ")
-            num_setting = Handler.input_handler(type=Inputs.NUMBER,stat_input=num_setting,lower=1,upper=3)
+            num_setting = Handler.input_handler(type=Inputs.NUMBER,
+                                                stat_input=num_setting,
+                                                lower=1, upper=3)
 
         page_setting = input("Limit the number of pages scraped? (y/n): ")
         page_setting = page_setting.lower()
-        page_setting = Handler.input_handler(type=Inputs.YES_NO,stat_input=page_setting)
+        page_setting = Handler.input_handler(type=Inputs.YES_NO,
+                                             stat_input=page_setting)
         if page_setting == "y":
             self._page_limit = input("Max number of pages: ")
-            self._page_limit = Handler.input_handler(type=Inputs.NUMBER,stat_input=self._page_limit,lower=1)
+            self._page_limit = Handler.input_handler(
+                type=Inputs.NUMBER,
+                stat_input=self._page_limit, lower=1)
         else:
             self._page_limit = -1
 
         if (self._page_limit != 1):
             ask_delay = input("Add a delay between each page? "
-                            "May reduce proliferation of errors. (y/n): ")
+                              "May reduce proliferation of errors. (y/n): ")
             ask_delay = ask_delay.lower()
-            ask_delay = Handler.input_handler(type=Inputs.YES_NO,stat_input=ask_delay)
+            ask_delay = Handler.input_handler(type=Inputs.YES_NO,
+                                              stat_input=ask_delay)
             if ask_delay == "y":
                 delay_in = input("Delay (in seconds) (1-9) : ")
-                delay_in = Handler.input_handler(type=Inputs.NUMBER,stat_input=delay_in,lower=1,upper=9)
+                delay_in = Handler.input_handler(
+                    type=Inputs.NUMBER,
+                    stat_input=delay_in, lower=1, upper=9)
                 self._delay = delay_in
             else:
                 print("No delay specified... continuing program execution")
@@ -92,14 +103,13 @@ class Scraper:
             elif num_setting == 3:
                 self._target_url = self.intel
                 self._repeat = True
-        except:
-            Handler.error_handler(type=Errors.URL_SET,exit=True,delay=3)
+        except ValueError:
+            Handler.error_handler(type=Errors.URL_SET, exit=True, delay=3)
 
     def __del__(self):
         print("\n" + Formatting.PROGRAM_HEADER)
         Handler.clean(self._done)
         print(Formatting.PROGRAM_HEADER)
-        
 
     def scrape(self) -> None:
         if self._first:
@@ -109,7 +119,7 @@ class Scraper:
             try:
                 f = open(file_name, "w")
             except PermissionError:
-                Handler.error_handler(type=Errors.FILE,exit=True,delay=3)
+                Handler.error_handler(type=Errors.FILE, exit=True, delay=3)
             currentDate = str(datetime.datetime.now())
             f.write(titles + ",,," + currentDate + "\n")
             print("\nCollecting data, be patient!...")
@@ -118,7 +128,7 @@ class Scraper:
             try:
                 f = open(file_name, "a")
             except PermissionError:
-                Handler.error_handler(type=Errors.FILE,exit=True,delay=3)
+                Handler.error_handler(type=Errors.FILE, exit=True, delay=3)
 
         # setting the target URL, downloading the page, reading the contents,
         # and dumping it into a variable called url_page_dump
@@ -134,7 +144,7 @@ class Scraper:
             num_of_pages = (page_soup.find_all(
                 "span",
                 {"class": "list-tool-pagination-text"}))[0].strong.text[2:]
-        except:
+        except IndexError:
             num_of_pages = "1"
 
         # looping through all the found pages
@@ -174,23 +184,22 @@ class Scraper:
                 try:
                     product_brand = container.find(
                         "a", {"class": "item-brand"}).img["title"]
-                except:
+                except AttributeError or IndexError:
                     product_brand = "Unknown Brand"
 
                 # finds the product name
                 try:
                     product_name = container.find(
                         "a", {"class": "item-title"}).text
-                except:
+                except AttributeError or IndexError:
                     product_name = "Unknown Name"
 
                 # finds the sale percentage
                 try:
-                    product_sale_percent = container.find(
-                        "span", {"class": "price-save-percent"}).text
+                    product_sale_percent = container.find("span", {"class": "price-save-percent"}).text
                     if product_sale_percent[-1] != "%":
                         product_sale_percent = "0%"
-                except:
+                except AttributeError or IndexError:
                     product_sale_percent = "0%"
 
                 # finds the product price and replaces a comma with
@@ -202,7 +211,7 @@ class Scraper:
                         "li", {"class": "price-current"}).sup.text
                     product_price = \
                         (product_price_dollars + product_price_cents)
-                except:
+                except AttributeError or IndexError:
                     product_price = "0"
                 if ("," in product_price):
                     product_price = product_price.replace(",", "")
@@ -211,7 +220,7 @@ class Scraper:
                 try:
                     product_shipping_price = container.find(
                         "li", {"class": "price-ship"}).text
-                except:
+                except AttributeError or IndexError:
                     product_shipping_price = "0"
                 if (product_shipping_price == ""):
                     product_shipping_price = "0"
@@ -231,13 +240,13 @@ class Scraper:
                         (float(product_price) + float(product_shipping_price))
                     if (total_product_price == "0"):
                         total_product_price = "Unknown Price"
-                except:
+                except AttributeError or IndexError:
                     total_product_price = product_price
 
                 try:
                     product_link = container.find(
                         "a", {"class": "item-title"})["href"]
-                except:
+                except AttributeError or IndexError:
                     product_link = "https://newegg.ca"
 
                 f.write(product_brand + "," + product_name.replace(
