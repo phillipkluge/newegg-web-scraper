@@ -69,7 +69,7 @@ Default AMD CPU URL:
 * Fixed bug where text was spaced out during setup
 * Fixed bug where the program would not recognize any URLs
 
-#### B3 RELEASE:
+#### B1 RELEASE:
 * Added a proper error and input handler
 * Fixed small existing bugs
 * Automated cleanup of old cache and unused files
