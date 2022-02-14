@@ -45,10 +45,8 @@ if __name__ == "__main__":
     handler = Handler()
     scraper = Scraper(intel, amd)
 
-    error_trip = False
     try:
         scraper.scrape()
         print("\n" + "Done!")
     except urllib.error.HTTPError:
-        error_trip = True
         handler.error_handler(type=Errors.LOAD, exit=True, delay=3)
