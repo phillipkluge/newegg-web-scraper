@@ -12,10 +12,9 @@ ______________________________
 The main function of the program is to scrape Newegg for CPUs, although it can be used on other products as well (like graphics cards).
 The format of the URL __MUST__ be compatible. (i.e. must be in the format `https://www.newegg.ca/...&page=1`; see default URLs below for an example).
 
-The program comes with preset URLs for Intel and AMD CPUs that has been tested to function on day of release, although you are free to change them if they no longer work, just enter `y` when it asks `Change the default URL for Intel and AMD CPUs? (Not recommended!) (y/n):`.
-If the default URLs not longer work, please contact me and I will update them.
+The program comes with preset URLs for Intel and AMD CPUs that has been tested to function on day of release, although you are free to change them if they no longer work. If the default URLs not longer work, please also contact me and I will update them.
 
-If you wish to scrape another Newegg URL (even if they're not related to CPUs), input `c` when the program asks `Enter a CUSTOM link for scraping, or use DEFAULTS? (c/d):` (keeping in mind that the above format).
+If you wish to scrape another Newegg URL (even if they're not related to CPUs), input `y` when the program asks `Enter a custom link for scraping? (y/n):` (keeping in mind that the above format).
 
 Default Intel CPU URL:
 > https://www.newegg.ca/p/pl?N=100007670%2050001157&cm\_sp=Cat\_CPU-Processors\_8-\_-Visnav-\_-Intel-CPU&page=1
